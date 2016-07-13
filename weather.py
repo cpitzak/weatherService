@@ -72,6 +72,4 @@ class Weather:
 
 if __name__ == "__main__":
     weather = Weather()
-    print (weather.get_current_temp())
     weather.update_hourly_db()
-    print "hourly updated"
