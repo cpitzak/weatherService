@@ -23,15 +23,6 @@ class Weather:
         self.db = client.weatherdb
         self.collection = self.db.weather_channel
 
-    def get_current_temp(self):
-        url = 'http://api.wunderground.com/api/{api_key}/conditions/q/CA/Palo_Alto.json'.format(api_key=self.api_key)
-        response = urllib2.urlopen(url)
-        json_string = response.read()
-        parsed_json = json.loads(json_string)
-        temp = parsed_json['current_observation']['temp_f']
-        response.close()
-        return temp
-
     def get_hourly(self):
         current_time = datetime.datetime.now()
         current_day = current_time.day
@@ -46,7 +37,10 @@ class Weather:
             data_point = {}
             day = int(hourly[i]['FCTTIME']['mday'])
             data_point['temp'] = hourly[i]['temp']['english']
+            data_point['temp_feel'] = hourly[i]['feelslike']['english']
             data_point['humidity'] = hourly[i]['humidity']
+            data_point['condition'] = hourly[i]['condition']
+            data_point['condition_icon_url'] = hourly[i]['icon_url']
             data_point['date'] = hourly[i]['FCTTIME']['pretty']
             data.append(data_point)
             # checking at end to get 12:00 AM
@@ -63,7 +57,10 @@ class Weather:
             time = "{0} {1}".format(date_tokens[0], date_tokens[1])
             self.collection.update({'date': data[i]['date']},
                                    {"$set": {"temp": float(data[i]['temp']),
+                                             "temp_feel": float(data[i]['temp_feel']),
                                              "humidity": float(data[i]['humidity']),
+                                             "condition": data[i]['condition'],
+                                             "condition_icon_url": data[i]['condition_icon_url'],
                                              "time": time,
                                              "month": date_tokens[4],
                                              "day": int(date_tokens[5].replace(',','')),
