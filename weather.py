@@ -15,19 +15,41 @@ class Weather:
         cwd = os.path.dirname(os.path.realpath(__file__))
         parser.read(os.path.join(cwd, 'config.ini'))
         self.api_key = parser.get('wunderground.com', 'api_key')
+        self.hourly_url = parser.get('wunderground.com', 'hourly_url')
+        self.hourly_state = parser.get('wunderground.com', 'hourly_state')
+        self.hourly_city = parser.get('wunderground.com', 'hourly_city')
+        self.validate_config()
+        client = MongoClient('localhost', 27017)
+        self.db = client.weatherdb
+        self.collection = self.db.weather_channel
+        self.meta_data = self.db.meta_data
+        self.meta_data.update({"location": { "$exists": True }},
+                               {"$set": {"location.state": self.hourly_state, "location.city": self.hourly_city}},
+                               upsert=True)
+
+    def validate_config(self):
         if len(self.api_key) == 0:
             print("You must enter your api key in the config.ini file. e.g. api_key:YOU_API_KEY")
             print("Exiting")
             sys.exit(1)
-        client = MongoClient('localhost', 27017)
-        self.db = client.weatherdb
-        self.collection = self.db.weather_channel
+        if len(self.hourly_url) == 0:
+            print("You must enter the weatherunderground.com hourly url in the config.ini file. "
+                "e.g. hourly_url: http://api.wunderground.com/api/%(api_key)s/hourly/q/CA/Palo_Alto.json")
+            print("Exiting")
+            sys.exit(1)
+        if len(self.hourly_state) == 0:
+            print("You must enter the state in the config.ini file. e.g. hourly_state: CA")
+            print("Exiting")
+            sys.exit(1)
+        if len(self.hourly_city) == 0:
+            print("You must enter the city in the config.ini file. e.g. hourly_city: Palo Alto")
+            print("Exiting")
+            sys.exit(1)
 
     def get_hourly(self):
         current_time = datetime.datetime.now()
         current_day = current_time.day
-        url = 'http://api.wunderground.com/api/{api_key}/hourly/q/CA/Palo_Alto.json'.format(api_key=self.api_key)
-        response = urllib2.urlopen(url)
+        response = urllib2.urlopen(self.hourly_url)
         json_string = response.read()
         parsed_json = json.loads(json_string)
         hourly = parsed_json['hourly_forecast']
