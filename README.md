@@ -8,7 +8,9 @@ You need to have the following installed:
 
 - [MongoDB](http://www.mongodb.org) and must be running
 - [pymongo](https://docs.mongodb.com/getting-started/python/client/)
-- [wunderground API Key](https://www.wunderground.com/weather/api/)
+
+And you need an [wunderground API Key](https://www.wunderground.com/weather/api/)
+
 
 ## Install
 
