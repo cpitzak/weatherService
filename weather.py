@@ -18,8 +18,9 @@ class Weather:
         self.hourly_url = parser.get('wunderground.com', 'hourly_url')
         self.hourly_state = parser.get('wunderground.com', 'hourly_state')
         self.hourly_city = parser.get('wunderground.com', 'hourly_city')
+        self.mongodb_url = parser.get('urls', 'mongodb')
         self.validate_config()
-        client = MongoClient('localhost', 27017)
+        client = MongoClient(self.mongodb_url)
         self.db = client.weatherdb
         self.collection = self.db.weather_channel
         self.meta_data = self.db.meta_data
@@ -44,6 +45,9 @@ class Weather:
         if len(self.hourly_city) == 0:
             print("You must enter the city in the config.ini file. e.g. hourly_city: Palo Alto")
             print("Exiting")
+            sys.exit(1)
+        if len(self.mongodb_url) == 0:
+            print("You must specify the mongodb url in config.ini file.")
             sys.exit(1)
 
     def get_hourly(self):
