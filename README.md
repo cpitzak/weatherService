@@ -14,9 +14,31 @@ And you need an [wunderground API Key](https://www.wunderground.com/weather/api/
 
 ## Install
 
-Note: make sure mongdb is running whenever using this service
+Install and run via Docker ([Weather Service Docker Repository](https://hub.docker.com/r/cpitzak/weather-service/)):
+```
+$ docker pull cpitzak/weather-service:1.0.0
+$ docker run -e "WEATHER_SERVICE_MONGO_URL=mongodb://your_monog_url/weatherdb" \
+             -e "WEATHER_SERVICE_API_KEY=wunderground.com_api_key" \
+		     -e "WEATHER_SERVICE_HOURLY_URL=http://api.wunderground.com/api/your_api_key/hourly/q/CA/Palo_Alto.json" \
+			 -e "WEATHER_SERVICE_HOURLY_STATE=CA" \
+			 -e "WEATHER_SERVICE_HOURLY_CITY=Palo Alto" \
+			 -e "WEATHER_SERVICE_DELAY=15" \
+             -d cpitzak/weather-service:1.0.0
+```
 
+Or Build a docker image and run
+```
+$ docker build -t cpitzak/weather-service .
+$ docker run -e "WEATHER_SERVICE_MONGO_URL=mongodb://your_monog_url/weatherdb" \
+             -e "WEATHER_SERVICE_API_KEY=wunderground.com_api_key" \
+		     -e "WEATHER_SERVICE_HOURLY_URL=http://api.wunderground.com/api/your_api_key/hourly/q/CA/Palo_Alto.json" \
+			 -e "WEATHER_SERVICE_HOURLY_STATE=CA" \
+			 -e "WEATHER_SERVICE_HOURLY_CITY=Palo Alto" \
+			 -e "WEATHER_SERVICE_DELAY=15" \
+             -d cpitzak/weather-service
+```
 
+Or to setup Manually
 ```
 $ sudo mkdir /apps
 $ sudo chown pi /apps
