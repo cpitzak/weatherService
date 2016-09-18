@@ -23,7 +23,7 @@ $ docker run -e "WEATHER_SERVICE_MONGO_URL=mongodb://your_monog_url/weatherdb" \
 			 -e "WEATHER_SERVICE_HOURLY_STATE=CA" \
 			 -e "WEATHER_SERVICE_HOURLY_CITY=Palo Alto" \
 			 -e "WEATHER_SERVICE_DELAY=15" \
-             -d cpitzak/weather-service:1.0.0
+             cpitzak/weather-service:1.0.0
 ```
 
 Or Build a docker image and run
@@ -35,7 +35,7 @@ $ docker run -e "WEATHER_SERVICE_MONGO_URL=mongodb://your_monog_url/weatherdb" \
 			 -e "WEATHER_SERVICE_HOURLY_STATE=CA" \
 			 -e "WEATHER_SERVICE_HOURLY_CITY=Palo Alto" \
 			 -e "WEATHER_SERVICE_DELAY=15" \
-             -d cpitzak/weather-service
+             cpitzak/weather-service
 ```
 
 Or to setup Manually
